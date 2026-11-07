@@ -478,7 +478,7 @@ watch(
 
           <BidForm
             v-if="isOpen && authStore.isAuthenticated"
-            :minimum-bid="minimumBid"
+            :minimum-amount="minimumBid"
             :loading="submittingBid"
             @submit="submitBid"
           />
