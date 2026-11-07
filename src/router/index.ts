@@ -11,6 +11,7 @@ import MyProfileView from '@/views/MyProfileView.vue'
 import MyOrdersView from '@/views/MyOrdersView.vue'
 import MySalesView from '@/views/MySalesView.vue'
 import OrderDetailView from '@/views/OrderDetailView.vue'
+import PaymentResultView from '@/views/PaymentResultView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -72,6 +73,11 @@ const router = createRouter({
       name: 'order-detail',
       component: OrderDetailView,
       meta: { requiresAuth: true },
+    },
+    {
+      path: '/pago/resultado',
+      name: 'payment-result',
+      component: PaymentResultView,
     },
     {
       path: '/:pathMatch(.*)*',
