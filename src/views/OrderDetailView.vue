@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { ArrowLeft, ExternalLink, RefreshCw, ShoppingBag } from 'lucide-vue-next'
+import { ArrowLeft, ExternalLink, RefreshCw, ShoppingBag, UserRound, Mail } from 'lucide-vue-next'
 
 import { orderService } from '@/services/order.service'
 import { auctionService } from '@/services/auction.service'
@@ -9,6 +9,8 @@ import { userService } from '@/services/user.service'
 
 import type { Order, OrderStatus } from '@/types/order.types'
 import type { Auction } from '@/types/auction.types'
+import type { PublicUser } from '@/types/user.types'
+
 import { formatCurrency } from '@/utils/currency'
 import { formatDate } from '@/utils/date'
 
@@ -16,6 +18,7 @@ const route = useRoute()
 
 const order = ref<Order | null>(null)
 const auction = ref<Auction | null>(null)
+const buyer = ref<PublicUser | null>(null)
 const currentUserId = ref('')
 
 const loading = ref(true)
@@ -62,11 +65,14 @@ async function loadOrder() {
     order.value = orderData
     currentUserId.value = userData.id
 
-    try {
-      auction.value = await auctionService.getById(orderData.auctionId)
-    } catch {
-      auction.value = null
-    }
+    const [auctionResult, buyerResult] = await Promise.allSettled([
+      auctionService.getById(orderData.auctionId),
+      userService.getPublicProfile(orderData.buyerId),
+    ])
+
+    auction.value = auctionResult.status === 'fulfilled' ? auctionResult.value : null
+
+    buyer.value = buyerResult.status === 'fulfilled' ? buyerResult.value : null
   } catch {
     errorMessage.value = 'No fue posible cargar la información de esta orden.'
   } finally {
@@ -145,10 +151,12 @@ onMounted(loadOrder)
           <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
             <div>
               <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
-                Identificador de orden
+                Compra registrada
               </p>
 
-              <h2 class="mt-1 break-all text-lg font-bold text-slate-900">#{{ order.id }}</h2>
+              <h2 class="mt-1 text-lg font-bold text-slate-900">
+                {{ formatDate(order.createdAt) }}
+              </h2>
             </div>
 
             <span
@@ -175,26 +183,6 @@ onMounted(loadOrder)
                 {{ formatDate(order.expiresAt) }}
               </p>
             </div>
-
-            <div>
-              <p class="text-xs text-slate-400">Identificador de subasta</p>
-
-              <RouterLink
-                :to="`/subastas/${order.auctionId}`"
-                class="mt-1 inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700"
-              >
-                {{ order.auctionId }}
-                <ExternalLink :size="13" />
-              </RouterLink>
-            </div>
-
-            <div>
-              <p class="text-xs text-slate-400">Identificador del comprador</p>
-
-              <p class="mt-1 break-all text-sm font-medium text-slate-800">
-                {{ order.buyerId }}
-              </p>
-            </div>
           </div>
         </div>
 
@@ -215,9 +203,13 @@ onMounted(loadOrder)
 
           <div class="mt-5 border-t border-slate-100 pt-5">
             <template v-if="auction">
-              <h3 class="text-lg font-bold text-slate-900">
+              <RouterLink
+                :to="`/subastas/${auction.id}`"
+                class="inline-flex items-center gap-2 text-lg font-bold text-slate-900 transition-colors hover:text-primary-600"
+              >
                 {{ auction.title }}
-              </h3>
+                <ExternalLink :size="16" />
+              </RouterLink>
 
               <p class="mt-2 text-sm leading-6 text-slate-500">
                 {{ auction.description }}
@@ -235,6 +227,41 @@ onMounted(loadOrder)
             <span class="text-2xl font-bold text-slate-900">
               {{ formatCurrency(order.amount) }}
             </span>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center gap-3">
+            <div
+              class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600"
+            >
+              <UserRound :size="21" />
+            </div>
+
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Información del comprador</h2>
+
+              <p class="text-xs text-slate-500">Datos del usuario asociado a esta compra.</p>
+            </div>
+          </div>
+
+          <div class="mt-5 border-t border-slate-100 pt-5">
+            <template v-if="buyer">
+              <h3 class="text-base font-bold text-slate-900">
+                {{ buyer.name }}
+              </h3>
+
+              <div class="mt-2 flex items-center gap-2 text-sm text-slate-500">
+                <Mail :size="15" />
+                <a :href="`mailto:${buyer.email}`" class="transition-colors hover:text-primary-600">
+                  {{ buyer.email }}
+                </a>
+              </div>
+            </template>
+
+            <p v-else class="text-sm text-slate-500">
+              No fue posible cargar la información del comprador.
+            </p>
           </div>
         </div>
 

@@ -1,7 +1,15 @@
 ﻿<script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeft, CalendarDays, Clock, Gavel, Radio, RefreshCw } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  CalendarDays,
+  Clock,
+  Gavel,
+  Radio,
+  RefreshCw,
+  Ban,
+} from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
 import { auctionService } from '@/services/auction.service'
@@ -31,11 +39,34 @@ const sellerLoading = ref(false)
 
 const loading = ref(true)
 const bidsLoading = ref(true)
+const bidsLoadFailed = ref(false)
 const submittingBid = ref(false)
+const cancellingAuction = ref(false)
 
 const auctionId = computed(() => String(route.params.id))
 
 const isOpen = computed(() => auction.value?.status === 'OPEN')
+
+const isSeller = computed(() => {
+  return (
+    authStore.isAuthenticated &&
+    auction.value?.sellerId === authStore.user?.id
+  )
+})
+
+const acceptedBidsCount = computed(() => {
+  return bids.value.filter((bid) => bid.status === 'ACCEPTED').length
+})
+
+const canCancelAuction = computed(() => {
+  return (
+    isSeller.value &&
+    isOpen.value &&
+    !bidsLoading.value &&
+    !bidsLoadFailed.value &&
+    acceptedBidsCount.value === 0
+  )
+})
 
 const minimumBid = computed(() => {
   if (!auction.value) return 0
@@ -144,16 +175,19 @@ async function loadAuction() {
 async function loadBids() {
   if (!authStore.isAuthenticated) {
     bids.value = []
+    bidsLoadFailed.value = false
     bidsLoading.value = false
     return
   }
 
   bidsLoading.value = true
+  bidsLoadFailed.value = false
 
   try {
     bids.value = await bidService.getAll(auctionId.value)
   } catch {
     bids.value = []
+    bidsLoadFailed.value = true
     toast.error('No fue posible cargar el historial de ofertas.')
   } finally {
     bidsLoading.value = false
@@ -182,11 +216,14 @@ async function refreshAuctionData() {
     auction.value = auctionData
 
     if (authStore.isAuthenticated) {
+      bidsLoadFailed.value = false
       bids.value = await bidService.getAll(auctionId.value)
     } else {
       bids.value = []
+      bidsLoadFailed.value = false
     }
   } catch {
+    bidsLoadFailed.value = true
     toast.error('No fue posible actualizar la información de la subasta.')
   }
 }
@@ -241,6 +278,31 @@ async function submitBid(amount: number) {
   }
 }
 
+async function cancelAuction() {
+  if (!canCancelAuction.value || !auction.value) return
+
+  const confirmed = window.confirm(
+    '¿Estás seguro de que deseas cancelar esta subasta? Esta acción no se puede deshacer.',
+  )
+
+  if (!confirmed) return
+
+  cancellingAuction.value = true
+
+  try {
+    auction.value = await auctionService.cancel(auctionId.value)
+
+    toast.success('La subasta fue cancelada correctamente.')
+
+    await refreshAuctionData()
+  } catch {
+    toast.error('No fue posible cancelar la subasta. Verifica que siga activa y no tenga ofertas.')
+    await refreshAuctionData()
+  } finally {
+    cancellingAuction.value = false
+  }
+}
+
 function handleBidPlaced() {
   void refreshAuctionData()
 }
@@ -276,6 +338,7 @@ watch(
       void loadBids()
     } else {
       bids.value = []
+      bidsLoadFailed.value = false
       bidsLoading.value = false
     }
   },
@@ -433,7 +496,7 @@ watch(
               <div class="flex items-center justify-between gap-3 text-sm">
                 <span class="text-slate-500">Ofertas registradas</span>
                 <span class="font-semibold text-slate-800">
-                  {{ bids.filter((bid) => bid.status === 'ACCEPTED').length }}
+                  {{ acceptedBidsCount }}
                 </span>
               </div>
 
@@ -474,6 +537,37 @@ watch(
                 <p v-else class="mt-1 text-sm text-slate-400">Información no disponible</p>
               </div>
             </div>
+          </section>
+
+          <section
+            v-if="canCancelAuction"
+            class="rounded-2xl border border-red-100 bg-white p-6 shadow-sm"
+          >
+            <div class="flex items-start gap-3">
+              <div
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-600"
+              >
+                <Ban :size="20" />
+              </div>
+
+              <div>
+                <h3 class="font-bold text-slate-900">Administrar subasta</h3>
+                <p class="mt-1 text-sm leading-6 text-slate-500">
+                  Puedes cancelar esta subasta porque todavía no tiene ofertas aceptadas.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+              :disabled="cancellingAuction"
+              @click="cancelAuction"
+            >
+              <Ban v-if="!cancellingAuction" :size="17" />
+              <RefreshCw v-else :size="17" class="animate-spin" />
+              {{ cancellingAuction ? 'Cancelando...' : 'Cancelar subasta' }}
+            </button>
           </section>
 
           <BidForm
