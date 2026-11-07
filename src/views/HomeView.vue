@@ -1,14 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Gavel,
-  ShieldCheck,
-  Tag,
-  TrendingUp,
-} from 'lucide-vue-next'
+import { ArrowRight, ArrowUpRight, Gavel, ShieldCheck, Tag, TrendingUp } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
 import AuctionCard from '@/components/auctions/AuctionCard.vue'
@@ -58,9 +51,7 @@ const loadCategories = async () => {
 }
 
 const getCategoryName = (categoryId: string) => {
-  return categories.value.find(
-    (category) => category.id === categoryId,
-  )?.name ?? 'Sin categoría'
+  return categories.value.find((category) => category.id === categoryId)?.name ?? 'Sin categoría'
 }
 
 onMounted(() => {
@@ -71,106 +62,125 @@ onMounted(() => {
 
 <template>
   <div>
-    <section class="relative isolate overflow-hidden bg-slate-950">
-      <div class="absolute inset-0 -z-10 overflow-hidden">
-        <div class="absolute -right-40 -top-48 size-[550px] rounded-full bg-primary-600/20 blur-3xl" />
-        <div class="absolute -bottom-60 left-1/4 size-[500px] rounded-full bg-indigo-500/15 blur-3xl" />
-        <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:48px_48px]" />
-      </div>
-
-      <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-2 lg:px-8 lg:py-32">
+    <section class="border-b border-slate-200 bg-white">
+      <div
+        class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:py-24"
+      >
         <div>
-          <div class="inline-flex items-center gap-2 rounded-full border border-primary-400/30 bg-primary-500/10 px-3 py-1.5 text-xs font-semibold text-primary-200">
-            <span class="size-1.5 rounded-full bg-emerald-400" />
-            Descubre nuevas oportunidades
-          </div>
+          <p class="text-sm font-semibold text-primary-700">FSOCIETY · Plataforma de subastas</p>
 
-          <h1 class="mt-7 max-w-2xl text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Encuentra.
-            <span class="text-primary-400">Oferta.</span>
-            Gana.
+          <h1
+            class="mt-6 max-w-2xl text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-[3.5rem]"
+          >
+            Encuentra lo que buscas.
+            <span class="text-primary-700"> Haz tu oferta. </span>
           </h1>
 
-          <p class="mt-6 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
-            Participa en subastas, compite por lo que te interesa y descubre oportunidades en un solo lugar.
+          <p class="mt-6 max-w-xl text-base leading-7 text-slate-600">
+            Explora artículos en subasta, consulta las ofertas y participa para conseguir aquello
+            que te interesa.
           </p>
 
-          <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
             <RouterLink
               to="/subastas"
-              class="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 text-sm font-bold text-white shadow-lg shadow-primary-950/30 transition-colors hover:bg-primary-500"
+              class="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 text-sm font-semibold text-white transition-colors hover:bg-primary-800"
             >
               Explorar subastas
-              <ArrowRight :size="18" />
+              <ArrowRight :size="17" />
             </RouterLink>
 
             <RouterLink
               to="/registro"
-              class="inline-flex min-h-12 items-center justify-center rounded-lg border border-slate-600 px-6 text-sm font-bold text-white transition-colors hover:border-slate-400 hover:bg-white/5"
+              class="inline-flex min-h-12 items-center justify-center rounded-lg border border-slate-300 bg-white px-6 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-50"
             >
               Crear una cuenta
             </RouterLink>
           </div>
 
-          <div class="mt-10 flex flex-wrap gap-x-7 gap-y-3">
-            <div class="flex items-center gap-2 text-sm text-slate-300">
-              <ShieldCheck :size="17" class="text-emerald-400" />
+          <div
+            class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-slate-200 pt-6"
+          >
+            <div class="flex items-center gap-2 text-sm text-slate-600">
+              <ShieldCheck :size="17" class="text-primary-700" />
               Participación segura
             </div>
 
-            <div class="flex items-center gap-2 text-sm text-slate-300">
-              <Gavel :size="17" class="text-primary-400" />
+            <div class="flex items-center gap-2 text-sm text-slate-600">
+              <Gavel :size="17" class="text-primary-700" />
               Ofertas en tiempo real
             </div>
           </div>
         </div>
 
-        <div class="relative hidden lg:block">
-          <div class="absolute inset-0 rounded-full bg-primary-500/10 blur-3xl" />
+        <div class="lg:pl-10">
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-7 sm:p-9">
+            <div class="border-b border-slate-200 pb-6">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Cómo funciona
+              </p>
 
-          <div class="relative rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-sm">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-slate-400">
-                  Tu próxima oportunidad
-                </p>
-                <h2 class="mt-1 text-xl font-bold text-white">
-                  Comienza a participar
-                </h2>
+              <h2 class="mt-2 text-xl font-bold text-slate-900">Participar es sencillo</h2>
+
+              <p class="mt-2 text-sm leading-6 text-slate-600">
+                Sigue estos pasos para participar en las subastas disponibles.
+              </p>
+            </div>
+
+            <div class="divide-y divide-slate-200">
+              <div class="flex gap-4 py-5">
+                <span
+                  class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-800"
+                >
+                  01
+                </span>
+
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-900">Explora las subastas</h3>
+                  <p class="mt-1 text-sm leading-6 text-slate-600">
+                    Consulta los artículos disponibles y sus condiciones.
+                  </p>
+                </div>
               </div>
 
-              <div class="flex size-12 items-center justify-center rounded-xl bg-primary-500/15 text-primary-300">
-                <Gavel :size="25" />
+              <div class="flex gap-4 py-5">
+                <span
+                  class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-800"
+                >
+                  02
+                </span>
+
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-900">Realiza tus ofertas</h3>
+                  <p class="mt-1 text-sm leading-6 text-slate-600">
+                    Participa y sigue la evolución de las ofertas.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex gap-4 pt-5">
+                <span
+                  class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-800"
+                >
+                  03
+                </span>
+
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-900">Consulta el resultado</h3>
+                  <p class="mt-1 text-sm leading-6 text-slate-600">
+                    Revisa el resultado de la subasta y el estado de tus participaciones.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div class="my-8 flex items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br from-primary-500/20 to-indigo-500/5 py-12">
-              <div class="flex size-32 items-center justify-center rounded-full border border-primary-300/20 bg-primary-400/10">
-                <Gavel :size="58" class="text-primary-300" :stroke-width="1.3" />
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div class="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                <TrendingUp :size="20" class="text-emerald-400" />
-                <p class="mt-3 text-sm font-semibold text-white">
-                  Ofertas competitivas
-                </p>
-                <p class="mt-1 text-xs text-slate-400">
-                  Participa y supera ofertas.
-                </p>
-              </div>
-
-              <div class="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                <Tag :size="20" class="text-primary-300" />
-                <p class="mt-3 text-sm font-semibold text-white">
-                  Varias categorías
-                </p>
-                <p class="mt-1 text-xs text-slate-400">
-                  Encuentra lo que buscas.
-                </p>
-              </div>
-            </div>
+            <RouterLink
+              to="/subastas"
+              class="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-primary-700 transition-colors hover:text-primary-900"
+            >
+              Ver subastas disponibles
+              <ArrowRight :size="16" />
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -179,17 +189,13 @@ onMounted(() => {
     <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p class="text-xs font-bold tracking-widest text-primary-600 uppercase">
-            Explora
-          </p>
+          <p class="text-xs font-bold tracking-widest text-primary-600 uppercase">Explora</p>
 
           <h2 class="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
             Categorías
           </h2>
 
-          <p class="mt-2 text-sm text-slate-500">
-            Descubre las subastas según tus intereses.
-          </p>
+          <p class="mt-2 text-sm text-slate-500">Descubre las subastas según tus intereses.</p>
         </div>
 
         <RouterLink
@@ -201,10 +207,7 @@ onMounted(() => {
         </RouterLink>
       </div>
 
-      <div
-        v-if="loadingCategories"
-        class="py-8"
-      >
+      <div v-if="loadingCategories" class="py-8">
         <LoadingState message="Cargando categorías..." min-height="120px" />
       </div>
 
@@ -218,7 +221,9 @@ onMounted(() => {
           :to="{ name: 'auctions', query: { categoryId: category.id } }"
           class="group flex min-h-28 items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-md"
         >
-          <div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 transition-colors group-hover:bg-primary-600 group-hover:text-white">
+          <div
+            class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 transition-colors group-hover:bg-primary-600 group-hover:text-white"
+          >
             <Tag :size="22" />
           </div>
 
@@ -267,17 +272,11 @@ onMounted(() => {
           </RouterLink>
         </div>
 
-        <div
-          v-if="loadingAuctions"
-          class="py-10"
-        >
+        <div v-if="loadingAuctions" class="py-10">
           <LoadingState message="Cargando subastas..." />
         </div>
 
-        <div
-          v-else-if="auctions.length"
-          class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-        >
+        <div v-else-if="auctions.length" class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <AuctionCard
             v-for="auction in auctions"
             :key="auction.id"
@@ -296,7 +295,9 @@ onMounted(() => {
     </section>
 
     <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div class="overflow-hidden rounded-2xl bg-primary-700 px-6 py-10 sm:px-10 lg:flex lg:items-center lg:justify-between lg:px-14 lg:py-12">
+      <div
+        class="overflow-hidden rounded-2xl bg-primary-700 px-6 py-10 sm:px-10 lg:flex lg:items-center lg:justify-between lg:px-14 lg:py-12"
+      >
         <div class="max-w-2xl">
           <p class="text-xs font-bold tracking-widest text-primary-200 uppercase">
             ¿Tienes algo para ofrecer?

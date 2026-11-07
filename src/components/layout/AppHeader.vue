@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import {
-  Gavel,
   Menu,
   X,
   UserRound,
@@ -45,13 +44,15 @@ async function handleLogout() {
   <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
     <div class="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
       <RouterLink to="/" class="flex items-center gap-2.5" @click="closeMobileMenu">
-        <div class="flex size-10 items-center justify-center rounded-xl bg-primary-600 text-white">
-          <Gavel :size="22" :stroke-width="2.2" />
-        </div>
+        <img
+          src="/logo.svg"
+          alt="FSOCIETY"
+          class="size-11 object-contain"
+        />
 
         <div class="flex flex-col">
           <span class="text-lg font-extrabold tracking-tight text-slate-900">
-            Subasta<span class="text-primary-600">Ya</span>
+            FSOCIETY
           </span>
           <span class="-mt-0.5 text-[10px] font-medium tracking-widest text-slate-400 uppercase">
             Marketplace

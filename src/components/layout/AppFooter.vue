@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { Gavel, ShieldCheck } from 'lucide-vue-next'
+import { ShieldCheck } from 'lucide-vue-next'
 
 const currentYear = new Date().getFullYear()
 </script>
@@ -10,12 +10,14 @@ const currentYear = new Date().getFullYear()
     <div class="mx-auto grid max-w-7xl gap-10 px-4 py-10 sm:px-6 md:grid-cols-3 lg:px-8">
       <div>
         <RouterLink to="/" class="inline-flex items-center gap-2">
-          <div class="flex size-9 items-center justify-center rounded-lg bg-primary-600 text-white">
-            <Gavel :size="19" />
-          </div>
+          <img
+            src="/logo.svg"
+            alt="FSOCIETY"
+            class="size-11 object-contain"
+          />
 
           <span class="text-lg font-extrabold tracking-tight text-slate-900">
-            Subasta<span class="text-primary-600">Ya</span>
+            FSOCIETY
           </span>
         </RouterLink>
 
@@ -80,9 +82,11 @@ const currentYear = new Date().getFullYear()
     </div>
 
     <div class="border-t border-slate-100">
-      <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <div
+        class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8"
+      >
         <p class="text-xs text-slate-400">
-          © {{ currentYear }} SubastaYa. Todos los derechos reservados.
+          © {{ currentYear }} FSOCIETY. Todos los derechos reservados.
         </p>
 
         <div class="flex items-center gap-2 text-xs text-slate-400">
