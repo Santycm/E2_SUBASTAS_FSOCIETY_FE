@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import {
   Gavel,
   Menu,
@@ -11,36 +11,40 @@ import {
   Plus,
   LogIn,
   UserPlus,
+  LogOut,
 } from 'lucide-vue-next'
 
 import { useAuthStore } from '@/stores/auth.store'
 
 const authStore = useAuthStore()
 const route = useRoute()
+const router = useRouter()
 
 const mobileMenuOpen = ref(false)
 
-const closeMobileMenu = () => {
+function closeMobileMenu() {
   mobileMenuOpen.value = false
 }
 
-const isActive = (path: string) => {
+function isActive(path: string) {
   if (path === '/') {
     return route.path === '/'
   }
 
   return route.path === path || route.path.startsWith(`${path}/`)
 }
+
+async function handleLogout() {
+  authStore.logout()
+  closeMobileMenu()
+  await router.push('/')
+}
 </script>
 
 <template>
   <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
     <div class="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-      <RouterLink
-        to="/"
-        class="flex items-center gap-2.5"
-        @click="closeMobileMenu"
-      >
+      <RouterLink to="/" class="flex items-center gap-2.5" @click="closeMobileMenu">
         <div class="flex size-10 items-center justify-center rounded-xl bg-primary-600 text-white">
           <Gavel :size="22" :stroke-width="2.2" />
         </div>
@@ -59,7 +63,11 @@ const isActive = (path: string) => {
         <RouterLink
           to="/"
           class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
-          :class="isActive('/') ? 'bg-primary-50 text-primary-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'"
+          :class="
+            isActive('/')
+              ? 'bg-primary-50 text-primary-700'
+              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+          "
         >
           Inicio
         </RouterLink>
@@ -67,7 +75,11 @@ const isActive = (path: string) => {
         <RouterLink
           to="/subastas"
           class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
-          :class="isActive('/subastas') ? 'bg-primary-50 text-primary-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'"
+          :class="
+            isActive('/subastas')
+              ? 'bg-primary-50 text-primary-700'
+              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+          "
         >
           Explorar subastas
         </RouterLink>
@@ -76,7 +88,11 @@ const isActive = (path: string) => {
           v-if="authStore.isAuthenticated"
           to="/publicar"
           class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
-          :class="isActive('/publicar') ? 'bg-primary-50 text-primary-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'"
+          :class="
+            isActive('/publicar')
+              ? 'bg-primary-50 text-primary-700'
+              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+          "
         >
           <Plus :size="16" />
           Publicar
@@ -110,6 +126,15 @@ const isActive = (path: string) => {
             <UserRound :size="17" />
             Mi perfil
           </RouterLink>
+
+          <button
+            type="button"
+            class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600"
+            @click="handleLogout"
+          >
+            <LogOut :size="17" />
+            Cerrar sesión
+          </button>
         </template>
 
         <template v-else>
@@ -143,15 +168,14 @@ const isActive = (path: string) => {
       </button>
     </div>
 
-    <div
-      v-if="mobileMenuOpen"
-      class="border-t border-slate-200 bg-white px-4 py-4 md:hidden"
-    >
+    <div v-if="mobileMenuOpen" class="border-t border-slate-200 bg-white px-4 py-4 md:hidden">
       <nav class="mx-auto flex max-w-7xl flex-col gap-1">
         <RouterLink
           to="/"
           class="rounded-lg px-3 py-3 text-sm font-medium"
-          :class="isActive('/') ? 'bg-primary-50 text-primary-700' : 'text-slate-700 hover:bg-slate-50'"
+          :class="
+            isActive('/') ? 'bg-primary-50 text-primary-700' : 'text-slate-700 hover:bg-slate-50'
+          "
           @click="closeMobileMenu"
         >
           Inicio
@@ -160,7 +184,11 @@ const isActive = (path: string) => {
         <RouterLink
           to="/subastas"
           class="rounded-lg px-3 py-3 text-sm font-medium"
-          :class="isActive('/subastas') ? 'bg-primary-50 text-primary-700' : 'text-slate-700 hover:bg-slate-50'"
+          :class="
+            isActive('/subastas')
+              ? 'bg-primary-50 text-primary-700'
+              : 'text-slate-700 hover:bg-slate-50'
+          "
           @click="closeMobileMenu"
         >
           Explorar subastas
@@ -202,6 +230,17 @@ const isActive = (path: string) => {
             <UserRound :size="17" />
             Mi perfil
           </RouterLink>
+
+          <div class="my-2 border-t border-slate-100" />
+
+          <button
+            type="button"
+            class="flex items-center gap-2 rounded-lg px-3 py-3 text-left text-sm font-semibold text-red-600 hover:bg-red-50"
+            @click="handleLogout"
+          >
+            <LogOut :size="17" />
+            Cerrar sesión
+          </button>
         </template>
 
         <template v-else>
