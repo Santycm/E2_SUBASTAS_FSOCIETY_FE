@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { ArrowRight, ArrowUpRight, Gavel, ShieldCheck, Tag, TrendingUp } from 'lucide-vue-next'
+import { ArrowRight, ArrowUpRight, Gavel, ShieldCheck, Tag } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
 import AuctionCard from '@/components/auctions/AuctionCard.vue'
