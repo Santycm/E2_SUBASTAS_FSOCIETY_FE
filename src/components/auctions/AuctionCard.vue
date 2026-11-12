@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import {
-  ArrowUpRight,
-  Clock3,
-  Gavel,
-  Tag,
-} from 'lucide-vue-next'
+import { motion } from 'motion-v'
+import { ArrowUpRight, Clock3, Gavel, Tag } from 'lucide-vue-next'
 import type { Auction } from '@/types/auction.types'
 
 interface Props {
@@ -29,9 +25,7 @@ const currentPrice = computed(() => {
 })
 
 const priceLabel = computed(() => {
-  return props.auction.currentBid === null
-    ? 'Precio inicial'
-    : 'Oferta actual'
+  return props.auction.currentBid === null ? 'Precio inicial' : 'Oferta actual'
 })
 
 const statusConfig = computed(() => {
@@ -75,14 +69,39 @@ const formattedCloseDate = computed(() => {
 </script>
 
 <template>
-  <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:border-primary-200 hover:shadow-lg hover:shadow-slate-200/60">
-    <div class="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-primary-50 via-indigo-50 to-slate-100">
-      <div class="absolute -right-8 -top-10 size-40 rounded-full bg-primary-100/70" />
+  <motion.article
+    class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white"
+    :while-hover="{
+      y: -7,
+      scale: 1.015,
+      boxShadow: '0px 18px 35px rgba(15, 23, 42, 0.10)',
+      borderColor: 'rgba(199, 210, 254, 1)',
+    }"
+    :while-tap="{ scale: 0.985 }"
+    :transition="{
+      type: 'spring',
+      stiffness: 300,
+      damping: 24,
+    }"
+  >
+    <div
+      class="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-primary-50 via-indigo-50 to-slate-100"
+    >
+      <motion.div
+        class="absolute -right-8 -top-10 size-40 rounded-full bg-primary-100/70"
+        :while-hover="{ scale: 1.2, x: -8, y: 8 }"
+        :transition="{ duration: 0.5, ease: 'easeOut' }"
+      />
+
       <div class="absolute -bottom-16 -left-8 size-40 rounded-full bg-indigo-100/70" />
 
-      <div class="relative flex size-20 items-center justify-center rounded-2xl border border-white/80 bg-white/80 text-primary-600 shadow-sm backdrop-blur">
+      <motion.div
+        class="relative flex size-20 items-center justify-center rounded-2xl border border-white/80 bg-white/80 text-primary-600 shadow-sm backdrop-blur"
+        :while-hover="{ rotate: -8, scale: 1.1, y: -3 }"
+        :transition="{ type: 'spring', stiffness: 300, damping: 15 }"
+      >
         <Gavel :size="34" :stroke-width="1.5" />
-      </div>
+      </motion.div>
 
       <span
         class="absolute right-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ring-inset"
@@ -98,7 +117,9 @@ const formattedCloseDate = computed(() => {
         <span>{{ categoryName }}</span>
       </div>
 
-      <h3 class="line-clamp-2 min-h-12 text-base font-bold leading-6 text-slate-900 transition-colors group-hover:text-primary-700">
+      <h3
+        class="line-clamp-2 min-h-12 text-base font-bold leading-6 text-slate-900 transition-colors group-hover:text-primary-700"
+      >
         {{ auction.title }}
       </h3>
 
@@ -123,11 +144,14 @@ const formattedCloseDate = computed(() => {
 
       <RouterLink
         :to="{ name: 'auction-detail', params: { id: auction.id } }"
-        class="mt-5 flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary-50 px-4 py-2 text-sm font-bold text-primary-700 transition-colors hover:bg-primary-600 hover:text-white"
+        class="mt-5 flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary-50 px-4 py-2 text-sm font-bold text-primary-700 transition-all duration-200 hover:bg-primary-600 hover:text-white active:scale-[0.98]"
       >
         Ver subasta
-        <ArrowUpRight :size="16" />
+        <ArrowUpRight
+          :size="16"
+          class="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
       </RouterLink>
     </div>
-  </article>
+  </motion.article>
 </template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { motion } from 'motion-v'
 import { computed, ref, watch } from 'vue'
 import { Gavel } from 'lucide-vue-next'
 
@@ -22,10 +23,9 @@ const formattedMinimum = computed(() =>
   }).format(props.minimumAmount),
 )
 
-const isValid = computed(() =>
-  amount.value !== null &&
-  Number.isInteger(amount.value) &&
-  amount.value >= props.minimumAmount,
+const isValid = computed(
+  () =>
+    amount.value !== null && Number.isInteger(amount.value) && amount.value >= props.minimumAmount,
 )
 
 watch(
@@ -50,25 +50,20 @@ function submitBid() {
     @submit.prevent="submitBid"
   >
     <div class="mb-5 flex items-center gap-3">
-      <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
+      <div
+        class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-50 text-primary-600"
+      >
         <Gavel :size="22" />
       </div>
 
       <div>
-        <h3 class="text-lg font-bold text-slate-900">
-          Realizar una oferta
-        </h3>
-        <p class="text-sm text-slate-500">
-          Ingresa el valor que deseas ofertar.
-        </p>
+        <h3 class="text-lg font-bold text-slate-900">Realizar una oferta</h3>
+        <p class="text-sm text-slate-500">Ingresa el valor que deseas ofertar.</p>
       </div>
     </div>
 
     <div class="mb-4">
-      <label
-        for="bid-amount"
-        class="mb-2 block text-sm font-semibold text-slate-700"
-      >
+      <label for="bid-amount" class="mb-2 block text-sm font-semibold text-slate-700">
         Valor de tu oferta
       </label>
 
@@ -96,24 +91,31 @@ function submitBid() {
         </span>
       </p>
 
-      <p
-        v-if="amount !== null && !isValid"
-        class="mt-2 text-sm text-red-600"
-      >
+      <p v-if="amount !== null && !isValid" class="mt-2 text-sm text-red-600">
         Ingresa un valor entero igual o superior al mínimo permitido.
       </p>
     </div>
 
-    <button
+    <motion.button
       type="submit"
       :disabled="!isValid || disabled || loading"
-      class="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-600 px-5 py-3 font-semibold text-white transition hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
+      :while-hover="{
+        scale: 1.015,
+        y: -2,
+      }"
+      :while-tap="{ scale: 0.97 }"
+      :transition="{
+        type: 'spring',
+        stiffness: 350,
+        damping: 20,
+      }"
+      class="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <Gavel v-if="!loading" :size="18" />
 
       <span>
         {{ loading ? 'Enviando oferta...' : 'Confirmar oferta' }}
       </span>
-    </button>
+    </motion.button>
   </form>
 </template>

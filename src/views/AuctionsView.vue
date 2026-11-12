@@ -1,10 +1,8 @@
 <script setup lang="ts">
+import { motion } from 'motion-v'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import {
-  RotateCcw,
-  SlidersHorizontal,
-} from 'lucide-vue-next'
+import { RotateCcw, SlidersHorizontal } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
 import AuctionCard from '@/components/auctions/AuctionCard.vue'
@@ -15,10 +13,7 @@ import LoadingState from '@/components/common/LoadingState.vue'
 import { auctionService } from '@/services/auction.service'
 import { categoryService } from '@/services/category.service'
 
-import type {
-  Auction,
-  AuctionStatus,
-} from '@/types/auction.types'
+import type { Auction, AuctionStatus } from '@/types/auction.types'
 import type { Category } from '@/types/category.types'
 
 const route = useRoute()
@@ -27,9 +22,7 @@ const auctions = ref<Auction[]>([])
 const categories = ref<Category[]>([])
 
 const selectedCategory = ref(
-  typeof route.query.categoryId === 'string'
-    ? route.query.categoryId
-    : '',
+  typeof route.query.categoryId === 'string' ? route.query.categoryId : '',
 )
 
 const selectedStatus = ref<AuctionStatus | ''>('')
@@ -96,9 +89,7 @@ const clearFilters = () => {
 }
 
 const getCategoryName = (categoryId: string) => {
-  return categories.value.find(
-    (category) => category.id === categoryId,
-  )?.name ?? 'Sin categoría'
+  return categories.value.find((category) => category.id === categoryId)?.name ?? 'Sin categoría'
 }
 
 watch(page, () => {
@@ -108,8 +99,7 @@ watch(page, () => {
 watch(
   () => route.query.categoryId,
   (categoryId) => {
-    selectedCategory.value =
-      typeof categoryId === 'string' ? categoryId : ''
+    selectedCategory.value = typeof categoryId === 'string' ? categoryId : ''
 
     handleFilterChange()
   },
@@ -125,16 +115,15 @@ onMounted(() => {
   <div class="min-h-screen bg-slate-50">
     <section class="border-b border-slate-200 bg-white">
       <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <p class="text-xs font-bold tracking-widest text-primary-600 uppercase">
-          Marketplace
-        </p>
+        <p class="text-xs font-bold tracking-widest text-primary-600 uppercase">Marketplace</p>
 
         <h1 class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
           Explorar subastas
         </h1>
 
         <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
-          Descubre oportunidades, consulta las ofertas actuales y participa en las subastas disponibles.
+          Descubre oportunidades, consulta las ofertas actuales y participa en las subastas
+          disponibles.
         </p>
       </div>
     </section>
@@ -143,14 +132,14 @@ onMounted(() => {
       <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div class="flex items-center gap-3">
-            <div class="flex size-10 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
+            <div
+              class="flex size-10 items-center justify-center rounded-xl bg-primary-50 text-primary-600"
+            >
               <SlidersHorizontal :size="20" />
             </div>
 
             <div>
-              <h2 class="text-sm font-bold text-slate-900">
-                Filtrar subastas
-              </h2>
+              <h2 class="text-sm font-bold text-slate-900">Filtrar subastas</h2>
 
               <p class="mt-0.5 text-xs text-slate-500">
                 Selecciona los criterios que deseas consultar.
@@ -170,10 +159,7 @@ onMounted(() => {
 
         <div class="mt-6 grid gap-4 sm:grid-cols-2">
           <div>
-            <label
-              for="category-filter"
-              class="mb-2 block text-xs font-semibold text-slate-600"
-            >
+            <label for="category-filter" class="mb-2 block text-xs font-semibold text-slate-600">
               Categoría
             </label>
 
@@ -184,25 +170,16 @@ onMounted(() => {
               class="min-h-11 w-full rounded-lg border border-slate-300 bg-white px-3.5 text-sm text-slate-700 outline-none transition-colors focus:border-primary-500 focus:ring-2 focus:ring-primary-100 disabled:bg-slate-50"
               @change="handleFilterChange"
             >
-              <option value="">
-                Todas las categorías
-              </option>
+              <option value="">Todas las categorías</option>
 
-              <option
-                v-for="category in categories"
-                :key="category.id"
-                :value="category.id"
-              >
+              <option v-for="category in categories" :key="category.id" :value="category.id">
                 {{ category.name }}
               </option>
             </select>
           </div>
 
           <div>
-            <label
-              for="status-filter"
-              class="mb-2 block text-xs font-semibold text-slate-600"
-            >
+            <label for="status-filter" class="mb-2 block text-xs font-semibold text-slate-600">
               Estado
             </label>
 
@@ -212,25 +189,15 @@ onMounted(() => {
               class="min-h-11 w-full rounded-lg border border-slate-300 bg-white px-3.5 text-sm text-slate-700 outline-none transition-colors focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
               @change="handleFilterChange"
             >
-              <option value="">
-                Todos los estados
-              </option>
+              <option value="">Todos los estados</option>
 
-              <option value="OPEN">
-                En curso
-              </option>
+              <option value="OPEN">En curso</option>
 
-              <option value="CLOSED">
-                Finalizadas
-              </option>
+              <option value="CLOSED">Finalizadas</option>
 
-              <option value="NO_BIDS">
-                Sin ofertas
-              </option>
+              <option value="NO_BIDS">Sin ofertas</option>
 
-              <option value="CANCELLED">
-                Canceladas
-              </option>
+              <option value="CANCELLED">Canceladas</option>
             </select>
           </div>
         </div>
@@ -239,39 +206,48 @@ onMounted(() => {
       <section class="mt-9">
         <div class="mb-6 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
           <div>
-            <h2 class="text-xl font-extrabold text-slate-900">
-              Todas las subastas
-            </h2>
+            <h2 class="text-xl font-extrabold text-slate-900">Todas las subastas</h2>
 
             <p class="mt-1 text-sm text-slate-500">
               <template v-if="!loadingAuctions">
                 {{ total }} {{ total === 1 ? 'resultado encontrado' : 'resultados encontrados' }}
               </template>
 
-              <template v-else>
-                Consultando resultados...
-              </template>
+              <template v-else> Consultando resultados... </template>
             </p>
           </div>
         </div>
 
-        <LoadingState
-          v-if="loadingAuctions"
-          message="Cargando subastas..."
-          min-height="320px"
-        />
+        <LoadingState v-if="loadingAuctions" message="Cargando subastas..." min-height="320px" />
 
         <template v-else>
-          <div
-            v-if="auctions.length"
-            class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            <AuctionCard
-              v-for="auction in auctions"
+          <div v-if="auctions.length" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <motion.div
+              v-for="(auction, index) in auctions"
               :key="auction.id"
-              :auction="auction"
-              :category-name="getCategoryName(auction.categoryId)"
-            />
+              :initial="{
+                opacity: 0,
+                y: 28,
+                scale: 0.96,
+                filter: 'blur(8px)',
+              }"
+              :animate="{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                filter: 'blur(0px)',
+              }"
+              :transition="{
+                duration: 0.45,
+                delay: Math.min(index * 0.065, 0.4),
+                ease: [0.22, 1, 0.36, 1],
+              }"
+            >
+              <AuctionCard
+                :auction="auction"
+                :category-name="getCategoryName(auction.categoryId)"
+              />
+            </motion.div>
           </div>
 
           <EmptyState
@@ -288,18 +264,10 @@ onMounted(() => {
             </button>
           </EmptyState>
 
-          <div
-            v-if="totalPages > 1"
-            class="mt-10 flex flex-col items-center gap-3"
-          >
-            <AppPagination
-              v-model:page="page"
-              :total-pages="totalPages"
-            />
+          <div v-if="totalPages > 1" class="mt-10 flex flex-col items-center gap-3">
+            <AppPagination v-model:page="page" :total-pages="totalPages" />
 
-            <p class="text-xs text-slate-400">
-              Página {{ page }} de {{ totalPages }}
-            </p>
+            <p class="text-xs text-slate-400">Página {{ page }} de {{ totalPages }}</p>
           </div>
         </template>
       </section>
