@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { isAxiosError } from 'axios'
-import { Gavel, UserPlus } from 'lucide-vue-next'
+import { UserPlus } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
 import AppInput from '@/components/common/AppInput.vue'
@@ -91,19 +91,14 @@ async function handleSubmit() {
     <div class="w-full max-w-md">
       <div class="mb-8 text-center">
         <RouterLink to="/" class="inline-flex items-center gap-2">
-          <div
-            class="flex size-12 items-center justify-center rounded-2xl bg-primary-600 text-white"
-          >
-            <Gavel :size="25" />
-          </div>
-          <span class="text-2xl font-extrabold tracking-tight text-slate-900">
-            Subasta<span class="text-primary-600">Ya</span>
-          </span>
+          <img src="/logo.svg" alt="FSOCIETY" class="size-12 object-contain" />
+
+          <span class="text-2xl font-extrabold tracking-tight text-slate-900"> FSOCIETY </span>
         </RouterLink>
 
         <h1 class="mt-7 text-3xl font-extrabold tracking-tight text-slate-900">Crea tu cuenta</h1>
 
-        <p class="mt-2 text-sm text-slate-500">Únete a SubastaYa y comienza a participar.</p>
+        <p class="mt-2 text-sm text-slate-500">Únete a FSOCIETY y comienza a participar.</p>
       </div>
 
       <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
