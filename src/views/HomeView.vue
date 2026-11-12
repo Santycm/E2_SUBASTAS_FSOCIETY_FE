@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { motion } from 'motion-v'
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ArrowRight, ArrowUpRight, Gavel, ShieldCheck, Tag } from 'lucide-vue-next'
@@ -215,28 +216,46 @@ onMounted(() => {
         v-else-if="categories.length"
         class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
       >
-        <RouterLink
-          v-for="category in categories"
+        <motion.div
+          v-for="(category, index) in categories"
           :key="category.id"
-          :to="{ name: 'auctions', query: { categoryId: category.id } }"
-          class="group flex min-h-28 items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-md"
+          :initial="{
+            opacity: 0,
+            y: 22,
+            scale: 0.96,
+          }"
+          :animate="{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+          }"
+          :transition="{
+            duration: 0.4,
+            delay: Math.min(index * 0.07, 0.35),
+            ease: 'easeOut',
+          }"
         >
-          <div
-            class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 transition-colors group-hover:bg-primary-600 group-hover:text-white"
+          <RouterLink
+            :to="{ name: 'auctions', query: { categoryId: category.id } }"
+            class="group flex min-h-28 items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:border-primary-200 hover:shadow-md active:scale-[0.98]"
           >
-            <Tag :size="22" />
-          </div>
+            <div
+              class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 transition-all duration-300 group-hover:rotate-6 group-hover:bg-primary-600 group-hover:text-white"
+            >
+              <Tag :size="22" />
+            </div>
 
-          <div class="min-w-0">
-            <h3 class="truncate text-sm font-bold text-slate-800">
-              {{ category.name }}
-            </h3>
+            <div class="min-w-0">
+              <h3 class="truncate text-sm font-bold text-slate-800">
+                {{ category.name }}
+              </h3>
 
-            <p class="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
-              {{ category.description }}
-            </p>
-          </div>
-        </RouterLink>
+              <p class="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
+                {{ category.description }}
+              </p>
+            </div>
+          </RouterLink>
+        </motion.div>
       </div>
 
       <EmptyState
@@ -277,12 +296,29 @@ onMounted(() => {
         </div>
 
         <div v-else-if="auctions.length" class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <AuctionCard
-            v-for="auction in auctions"
+          <motion.div
+            v-for="(auction, index) in auctions"
             :key="auction.id"
-            :auction="auction"
-            :category-name="getCategoryName(auction.categoryId)"
-          />
+            :initial="{
+              opacity: 0,
+              y: 30,
+              scale: 0.96,
+              filter: 'blur(8px)',
+            }"
+            :animate="{
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: 'blur(0px)',
+            }"
+            :transition="{
+              duration: 0.45,
+              delay: Math.min(index * 0.07, 0.4),
+              ease: [0.22, 1, 0.36, 1],
+            }"
+          >
+            <AuctionCard :auction="auction" :category-name="getCategoryName(auction.categoryId)" />
+          </motion.div>
         </div>
 
         <EmptyState
